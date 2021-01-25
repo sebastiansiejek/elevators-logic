@@ -7,13 +7,19 @@ run:-
 	initial().
 
 initial():-
-	new(Pict, window('Elevators logic',size(950,300))),
+	new(Pict, window('Elevators logic',size(950,350))),
     send(Pict, display, new(T, tabular)),
         send(T, border, 0),
         send(T, cell_spacing, -1),
         send(T, rules, all),
         send_list(T,
-                  [ append('pozycja windy'),
+                  [ append(''),
+                    append(''),
+                    append('+ 8'),
+                    append(''),
+                    append(''),
+                    next_row,
+                    append('pozycja windy'),
                     append('pozycja windy'),
                     append('pozycja windy'),
                     append('pozycja windy'),
@@ -23,7 +29,13 @@ initial():-
                     append(bitmap('elevator.jpg')),
                     append(bitmap('elevator.jpg')),
                     append(bitmap('elevator.jpg')),
-                    append(bitmap('elevator.jpg'))
+                    append(bitmap('elevator.jpg')),
+                    next_row,
+                    append(''),
+                    append(''),
+                    append('- 13'),
+                    append(''),
+                    append('')
                   ]),
 	send(new(D, dialog), below, Pict),
     send(D, append, button('Krok', message(@prolog, step))),
@@ -40,22 +52,8 @@ initial():-
 % Step 7: 3 & 5 down
 % Step 8: 4 & 5 up
 
-setFloor(X, X1):-
-    X is X1.
-
-upFloor(X, X1):-
-    X1 is X+8.
-
-downFloor(X, X1):-
-    X1 is X-13.
-
-step1(X1, X3, R1, R2):-
-    upFloor(X1, R1),
-    upFloor(X3, R2).
-
-start(X1, X2, X3, X4, X5):-
-    setFloor(X1, 17),
-    setFloor(X2, 26),
-    setFloor(X3, 20),
-    setFloor(X4, 19),
-    setFloor(X5, 31).
+% 17
+% 26
+% 20
+% 19
+% 31

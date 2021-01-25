@@ -1,29 +1,38 @@
-:- module(start, [start/0]).
-:- use_module(library(pce)).
+solve(B, P):-
+	path(B, [], P1),
+	reverse(P1, P).
 
-start:-
-	renderView().
+path(S, P, [S|P]):- final_state(S).
+path(S, P1, P):-
+	next_state(S, S1),
+	not(member(S1, P1)),
+	path(S1, [S1|P1], P).
 
-renderView():-
-	new(Pict, window('Elevator logic', size(1000, 500))),
-	send(Pict, open),
-	% elevator 1
-	new(Elevator1, figure),
-	send(Elevator1, display, bitmap('images/elevator1.jpg')),
-	send(Pict, display, Elevator1, point(0, 141)),
-	% elevator 2
-	new(Elevator2, figure),
-	send(Elevator2, display, bitmap('images/elevator2.jpg')),
-	send(Pict, display, Elevator2, point(200, 141)),
-	% elevator 3
-	new(Elevator3, figure),
-	send(Elevator3, display, bitmap('images/elevator3.jpg')),
-	send(Pict, display, Elevator3, point(400, 141)),
-	% elevator 4
-	new(Elevator4, figure),
-	send(Elevator4, display, bitmap('images/elevator4.jpg')),
-	send(Pict, display, Elevator4, point(600, 141)),
-	% elevator 5
-	new(Elevator5, figure),
-	send(Elevator5, display, bitmap('images/elevator5.jpg')),
-	send(Pict, display, Elevator5, point(800, 141)).
+next_state((A, B, C, D, E), (A1, B1, C, D, E)) :- transition((A,B), (A1, B1)).
+next_state((A, B, C, D, E), (A1, B, C1, D, E)) :- transition((A,C), (A1, C1)).
+next_state((A, B, C, D, E), (A1, B, C, D1, E)) :- transition((A,D), (A1, D1)).
+next_state((A, B, C, D, E), (A1, B, C, D, E1)) :- transition((A,E), (A1, E1)).
+next_state((A, B, C, D, E), (A, B1, C1, D, E)) :- transition((B,C), (B1, C1)).
+next_state((A, B, C, D, E), (A, B1, C, D1, E)) :- transition((B,D), (B1, D1)).
+next_state((A, B, C, D, E), (A, B1, C, D, E1)) :- transition((B,E), (B1, E1)).
+next_state((A, B, C, D, E), (A, B, C1, D1, E)) :- transition((C,D), (C1, D1)).
+next_state((A, B, C, D, E), (A, B, C1, D, E1)) :- transition((C,E), (C1, E1)).
+next_state((A, B, C, D, E), (A, B, C, D1, E1)) :- transition((D,E), (D1, E1)).
+
+transition((X, Y) , (X1, Y1)):- X1 is X+8, Y1 is Y+8, X1 =< 49, Y1 =< 49.
+transition((X, Y) , (X1, Y1)):- X1 is X-13, Y1 is Y-13, X1 >= 0, Y1 >= 0.
+
+
+not_good(A,B):-
+	not(good_position(A)),!;
+	not(good_position(B)).
+
+final_state((A,B,C,D,E)):-
+	good_position(A),
+	good_position(B),
+	good_position(C),
+	good_position(D),
+	good_position(E).
+
+good_position(X):-
+	X >= 21, X =< 25.
