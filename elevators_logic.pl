@@ -76,15 +76,24 @@ next_state([A,B,C,D,E], [A,B,C1,D1,E]) :- transition([C,D], [C1,D1]).
 next_state([A,B,C,D,E], [A,B,C1,D,E1]) :- transition([C,E], [C1,E1]).
 next_state([A,B,C,D,E], [A,B,C,D1,E1]) :- transition([D,E], [D1,E1]).
 
+isUp(X) :-
+    X < 21,
+    write(X),
+    write(' +8'),
+    nl.
+
+isDown(X) :-
+    X > 25,
+    write(X),
+    write(' -13'), nl.
+
 transition([X,Y], [X1, Y1]) :-
-    write('+8'),
     X1 is X+8,
     Y1 is Y+8,
     X1 =< 49,
     Y1 =< 49.
 
 transition([X,Y], [X1, Y1]) :-
-    write('-13'),
     X1 is X-13,
     Y1 is Y-13,
     X1 >= 0,
