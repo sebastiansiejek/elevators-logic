@@ -57,10 +57,6 @@ initial():-
     send(@P5, append(E5)).
 
 
-
-default():-
-    write('Inactive').
-
 start(E1, E2, E3, E4, E5, @T1, @T2, @T3, @T4, @T5):-
     solve([E1, E2, E3, E4, E5], X),
     last(X, Tail),
