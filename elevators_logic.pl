@@ -6,10 +6,10 @@ run:-
 	initial().
 
 initial():-
-    E1 = 31,
-    E2 = 27,
-    E3 = 6,
-    E4 = 18,
+    E1 = 17,
+    E2 = 26,
+    E3 = 20,
+    E4 = 19,
     E5 = 31,
 	new(Pict, window('Elevators logic',size(1100,350))),
     send(Pict, display, new(T, tabular)),
@@ -84,106 +84,108 @@ solve(B, P) :-
     reverse(P1, P).
 
 path(S, P, [S|P]) :- final_state(S).
-
 path(S, P1, P) :-
-    write('iterate'), nl,
     next_state(S, S1),
-    write(S),
     not(member(S1, P1)),
+    write(S),
+    nl,
     path(S1, [S1|P1], P).
 
-next_state([A,B,C,D,E], [A1,B1,C,D,E]) :- 
-    transition([A,B], [A1,B1]).
 
-next_state([A,B,C,D,E], [A1,B,C1,D,E]) :- 
-    transition([A,C], [A1,C1]).
+next_state([A,B,C,D,E], [A1,B1,C,D,E]) :- not_good(A,B), both_up_or_down(A,B), transition([A,B], [A1,B1]).
+next_state([A,B,C,D,E], [A1,B,C1,D,E]) :- not_good(A,C), both_up_or_down(A,C), transition([A,C], [A1,C1]).
+next_state([A,B,C,D,E], [A1,B,C,D1,E]) :- not_good(A,D), both_up_or_down(A,D), transition([A,D], [A1,D1]).
+next_state([A,B,C,D,E], [A1,B,C,D,E1]) :- not_good(A,E), both_up_or_down(A,E), transition([A,E], [A1,E1]).
+next_state([A,B,C,D,E], [A,B1,C1,D,E]) :- not_good(B,C), both_up_or_down(B,C), transition([B,C], [B1,C1]).
+next_state([A,B,C,D,E], [A,B1,C,D1,E]) :- not_good(B,D), both_up_or_down(B,D), transition([B,D], [B1,D1]).
+next_state([A,B,C,D,E], [A,B1,C,D,E1]) :- not_good(B,E), both_up_or_down(B,E), transition([B,E], [B1,E1]).
+next_state([A,B,C,D,E], [A,B,C1,D1,E]) :- not_good(C,D), both_up_or_down(C,D), transition([C,D], [C1,D1]).
+next_state([A,B,C,D,E], [A,B,C1,D,E1]) :- not_good(C,E), both_up_or_down(C,E), transition([C,E], [C1,E1]).
+next_state([A,B,C,D,E], [A,B,C,D1,E1]) :- not_good(D,E), both_up_or_down(D,E), transition([D,E], [D1,E1]).
 
-next_state([A,B,C,D,E], [A1,B,C,D1,E]) :- 
-    transition([A,D], [A1,D1]).
+next_state([A,B,C,D,E], [A1,B1,C,D,E]) :- A=<20, B<25, transition([A,B], [A1,B1]).
+next_state([A,B,C,D,E], [A1,B,C1,D,E]) :- A=<20, C<25, transition([A,C], [A1,C1]).
+next_state([A,B,C,D,E], [A1,B,C,D1,E]) :- A=<20, D<25, transition([A,D], [A1,D1]).
+next_state([A,B,C,D,E], [A1,B,C,D,E1]) :- A=<20, E<25, transition([A,E], [A1,E1]).
 
-next_state([A,B,C,D,E], [A1,B,C,D,E1]) :- 
-    transition([A,E], [A1,E1]).
+next_state([A,B,C,D,E], [A1,B1,C,D,E]) :- B=<20, A<25, transition([A,B], [A1,B1]).
+next_state([A,B,C,D,E], [A,B1,C1,D,E]) :- B=<20, C<25, transition([B,C], [B1,C1]).
+next_state([A,B,C,D,E], [A,B1,C,D1,E]) :- B=<20, D<25, transition([B,D], [B1,D1]).
+next_state([A,B,C,D,E], [A,B1,C,D,E1]) :- B=<20, E<25, transition([B,E], [B1,E1]).
 
-next_state([A,B,C,D,E], [A,B1,C1,D,E]) :- 
-    transition([B,C], [B1,C1]).
+next_state([A,B,C,D,E], [A,B1,C1,D,E]) :- C=<20, B < 25, transition([B,C], [B1,C1]).
+next_state([A,B,C,D,E], [A1,B,C1,D,E]) :- C=<20, A < 25, transition([A,C], [A1,C1]).
+next_state([A,B,C,D,E], [A,B,C1,D1,E]) :- C=<20, D < 25, transition([C,D], [C1,D1]).
+next_state([A,B,C,D,E], [A,B,C1,D,E1]) :- C=<20, E < 25, transition([C,E], [C1,E1]).
 
-next_state([A,B,C,D,E], [A,B1,C,D1,E]) :- 
-    transition([B,D], [B1,D1]).
+next_state([A,B,C,D,E], [A,B1,C,D1,E]) :- D=<20, B<25, transition([B,D], [B1,D1]).
+next_state([A,B,C,D,E], [A,B,C1,D1,E]) :- D=<20, C<25, transition([C,D], [C1,D1]).
+next_state([A,B,C,D,E], [A1,B,C,D1,E]) :- D=<20, A<25, transition([A,D], [A1,D1]).
+next_state([A,B,C,D,E], [A,B,C,D1,E1]) :- D=<20, E<25, transition([D,E], [D1,E1]).
 
-next_state([A,B,C,D,E], [A,B1,C,D,E1]) :- 
-    transition([B,E], [B1,E1]).
-
-next_state([A,B,C,D,E], [A,B,C1,D1,E]) :- 
-    transition([C,D], [C1,D1]).
-
-next_state([A,B,C,D,E], [A,B,C1,D,E1]) :- 
-    transition([C,E], [C1,E1]).
-
-next_state([A,B,C,D,E], [A,B,C,D1,E1]) :- 
-    transition([D,E], [D1,E1]).
-
+next_state([A,B,C,D,E], [A,B1,C,D,E1]) :- E=<20, B<25, transition([B,E], [B1,E1]).
+next_state([A,B,C,D,E], [A,B,C1,D,E1]) :- E=<20, C<25, transition([C,E], [C1,E1]).
+next_state([A,B,C,D,E], [A,B,C,D1,E1]) :- E=<20, D<25, transition([D,E], [D1,E1]).
+next_state([A,B,C,D,E], [A1,B,C,D,E1]) :- E=<20, A<25, transition([A,E], [A1,E1]).
 
 
 
+next_state([A,B,C,D,E], [A1,B1,C,D,E]) :- A>25, B>21, transition([A,B], [A1,B1]).
+next_state([A,B,C,D,E], [A1,B,C1,D,E]) :- A>25, C>21, transition([A,C], [A1,C1]).
+next_state([A,B,C,D,E], [A1,B,C,D1,E]) :- A>25, D>21, transition([A,D], [A1,D1]).
+next_state([A,B,C,D,E], [A1,B,C,D,E1]) :- A>25, E>21, transition([A,E], [A1,E1]).
+
+next_state([A,B,C,D,E], [A1,B1,C,D,E]) :- B>25, A>21, transition([A,B], [A1,B1]).
+next_state([A,B,C,D,E], [A,B1,C1,D,E]) :- B>25, C>21, transition([B,C], [B1,C1]).
+next_state([A,B,C,D,E], [A,B1,C,D1,E]) :- B>25, D>21, transition([B,D], [B1,D1]).
+next_state([A,B,C,D,E], [A,B1,C,D,E1]) :- B>25, E>21, transition([B,E], [B1,E1]).
+
+next_state([A,B,C,D,E], [A,B1,C1,D,E]) :- C>25, B>21, transition([B,C], [B1,C1]).
+next_state([A,B,C,D,E], [A1,B,C1,D,E]) :- C>25, A>21, transition([A,C], [A1,C1]).
+next_state([A,B,C,D,E], [A,B,C1,D1,E]) :- C>25, D>21, transition([C,D], [C1,D1]).
+next_state([A,B,C,D,E], [A,B,C1,D,E1]) :- C>25, E>21, transition([C,E], [C1,E1]).
+
+next_state([A,B,C,D,E], [A,B1,C,D1,E]) :- D>25, B>21, transition([B,D], [B1,D1]).
+next_state([A,B,C,D,E], [A,B,C1,D1,E]) :- D>25, C>21, transition([C,D], [C1,D1]).
+next_state([A,B,C,D,E], [A1,B,C,D1,E]) :- D>25, A>21, transition([A,D], [A1,D1]).
+next_state([A,B,C,D,E], [A,B,C,D1,E1]) :- D>25, E>21, transition([D,E], [D1,E1]).
+
+next_state([A,B,C,D,E], [A,B1,C,D,E1]) :- E>25, B>21, transition([B,E], [B1,E1]).
+next_state([A,B,C,D,E], [A,B,C1,D,E1]) :- E>25, C>21, transition([C,E], [C1,E1]).
+next_state([A,B,C,D,E], [A,B,C,D1,E1]) :- E>25, D>21, transition([D,E], [D1,E1]).
+next_state([A,B,C,D,E], [A1,B,C,D,E1]) :- E>25, A>21, transition([A,E], [A1,E1]).
+
+
+isLower(X):-
+X<21.
+
+
+    
 transition([X,Y], [X1, Y1]) :-
-    not_good(X, Y),
-    X < 21,
-    Y < 21,
-    write(X),
-    write('X +8'),
-    nl,
-    write(Y),
-    write('Y +8'),
-    nl,
-    X1 is X+8,
+	X < 21,	
+	X1 is X+8,
     Y1 is Y+8,
-    X1 =< 49,
-    Y1 =< 49.
-
-
+    write('X: '),
+    write(X),
+    write(' +8'),
+    nl,
+    write('Y: '),
+    write(Y),
+    write(' +8'),
+    nl.
 
 transition([X,Y], [X1, Y1]) :-
-    not_good(X, Y),
-    X > 25,
-    Y > 25,
-    write(X),
-    write('X -13'), nl,
-    write(Y),
-    write('Y -13'),
-    nl,
-    X1 is X-13,
+	X >= 21,
+	X1 is X-13,
     Y1 is Y-13,
-    X1 >= 0,
-    Y1 >= 0.
-
-transition([X,Y], [X1, Y1]) :-
-    not_good(X, Y),
-    X > 25; Y > 25,
+    write('X: '),
     write(X),
-    write('X +8'),
+    write(' -13'),
     nl,
+    write('Y: '),
     write(Y),
-    write('Y +8'),
-    nl,
-    X1 is X+8,
-    Y1 is Y+8,
-    X1 =< 49,
-    Y1 =< 49.
-
-
-transition([X,Y], [X1, Y1]) :-
-    not_good(X, Y),
-    X < 21; Y < 21,
-    write(X),
-    write('X +8'),
-    nl,
-    write(Y),
-    write('Y +8'),
-    nl,
-    X1 is X+8,
-    Y1 is Y+8,
-    X1 =< 49,
-    Y1 =< 49.
+    write(' -13'),
+    nl.
 
 not_good(A,B) :-
     not(good_position(A)),
@@ -200,4 +202,9 @@ final_state([A,B,C,D,E]) :-
 good_position(X) :-
     X >= 21,
     X =< 25.
-    
+
+both_up_or_down(X,Y):-
+X < 21, Y < 21.
+
+both_up_or_down(X,Y):-
+X > 25, Y > 25.
