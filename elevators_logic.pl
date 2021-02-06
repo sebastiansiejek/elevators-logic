@@ -155,11 +155,6 @@ next_state([A,B,C,D,E], [A,B,C1,D,E1]) :- E>25, C>21, transition([C,E], [C1,E1])
 next_state([A,B,C,D,E], [A,B,C,D1,E1]) :- E>25, D>21, transition([D,E], [D1,E1]).
 next_state([A,B,C,D,E], [A1,B,C,D,E1]) :- E>25, A>21, transition([A,E], [A1,E1]).
 
-
-isLower(X):-
-X<21.
-
-
     
 transition([X,Y], [X1, Y1]) :-
 	X < 21,	
